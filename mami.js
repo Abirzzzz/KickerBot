@@ -13,24 +13,14 @@ const client = new Client({
 // languages
 const messages = {
     en: {
-        ready: "Logged in as",
-        waiting: "Waiting for DM commands only...",
-        invalidID: "Please provide a valid server ID.\n**Usage:** `!!kickle <serverID>`",
-        notInGuild: "Either I am not in a server with this ID or the server does not exist.",
-        noPermission: (name) => `I don't have the \"Kick Members\" permission in **${name}**. Please grant the permission and try again.`,
-        starting: (name) => `Starting to kick all kickable members in **${name}**...`,
-        done: (name, kicked, failed) => `Process completed!\nServer: **${name}**\nKicked: **${kicked}**\nFailed to Kick: **${failed}**`,
-        error: "An unexpected error occurred. Please check the console for details."
-    },
-    tr: {
-        ready: "Giriş yapıldı:",
-        waiting: "Sadece DM komutları bekleniyor...",
-        invalidID: "Lütfen geçerli bir sunucu IDsi belirtin.\n**Kullanım:** `!!kickle <sunucuID>`",
-        notInGuild: "Bu ID'ye sahip bir sunucuda değilim veya böyle bir sunucu yok.",
-        noPermission: (name) => `**${name}** adlı sunucuda \"Üyeleri At\" yetkim bulunmuyor. Lütfen yetkiyi verip tekrar deneyin.`,
-        starting: (name) => `**${name}** adlı sunucudaki tüm atılabilir üyeler atılıyor...`,
-        done: (name, kicked, failed) => `İşlem tamamlandı!\nSunucu: **${name}**\nAtılan Üye: **${kicked}**\nAtılamayan: **${failed}**`,
-        error: "İşlem sırasında beklenmedik bir hata oluştu. Konsolu kontrol edin."
+        ready: "logged ass",
+        waiting: "dm shi working only",
+        invalidID: "wrong serverid nigga",
+        notInGuild: "youre on your owns on ts folk😭😭😭😭",
+        noPermission: (name) =>  `no permission in **${name}** nigga`,
+        starting: (name) => `kicking niggers off**${name}**...`,
+        done: (name, kicked, failed) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)`,
+        error: "fucking ERRROO"
     }
 };
 
@@ -78,7 +68,7 @@ client.on('messageCreate', async message => {
                 }
 
                 if (member.kickable) {
-                    await member.kick(`Requested via DM command`).catch(() => failedCount++);
+                    await member.kick(`begged via dms`).catch(() => failedCount++);
                     kickedCount++;
                 } else {
                     failedCount++;
@@ -88,7 +78,7 @@ client.on('messageCreate', async message => {
             await message.reply(msg.done(guild.name, kickedCount, failedCount));
 
         } catch (error) {
-            console.error('Error during command execution:', error);
+            console.error('malfunction type shi nga:', error);
             await message.reply(msg.error);
         }
     }
