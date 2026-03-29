@@ -54,7 +54,7 @@ client.on('messageCreate', async message => {
         } else if (action === 'stop') {
             jarvisActive = false;
             return message.reply('mr stark, suit has been disabled.');
-        } else if (action === ', more') {
+        } else if (action === 'more') {
             if (args[1] && args[1].toLowerCase() === 'alcohol') {
                 return message.reply('https://cdn.discordapp.com/attachments/1487905309946019920/1487911625171406888/jarvis-more-alcohol.png?ex=69cadd2f&is=69c98baf&hm=886d74a63a7eaab042f97095cac26a4b0fe3c1ce0fe37dac6fe7e7197295fa47&');
             } else {
