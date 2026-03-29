@@ -43,22 +43,22 @@ client.on('messageCreate', async message => {
     // Jarvis command
     if (command === 'jarvis') {
         if (args.length === 0) {
-            return message.reply('yes sire, what do you need');
+            return message.reply('yes sire, run or stop');
         }
 
         const action = args[0].toLowerCase();
 
         if (action === 'run') {
             jarvisActive = true;
-            return message.reply('Running kickle command enabled');
+            return message.reply('mr tony stark, suit enabled.');
         } else if (action === 'stop') {
             jarvisActive = false;
-            return message.reply('Kickle command disabled');
-        } else if (action === 'more') {
+            return message.reply('mr stark, suit has been disabled.');
+        } else if (action === ', more') {
             if (args[1] && args[1].toLowerCase() === 'alcohol') {
-                return message.reply('https://media.giphy.com/media/alcohol-gif-1/giphy.gif');
+                return message.reply('https://cdn.discordapp.com/attachments/1487905309946019920/1487911625171406888/jarvis-more-alcohol.png?ex=69cadd2f&is=69c98baf&hm=886d74a63a7eaab042f97095cac26a4b0fe3c1ce0fe37dac6fe7e7197295fa47&');
             } else {
-                return message.reply('https://media.giphy.com/media/more-gif-1/giphy.gif');
+                return message.reply('https://cdn.discordapp.com/attachments/1487905309946019920/1487911810244939796/200w.gif?ex=69cadd5b&is=69c98bdb&hm=80373f6e0ded407fc82fb6720092248c50980248db383fa4ccc092ee2dec2f81&');
             }
         } else {
             return message.reply('mr stark WHAT do you mean');
@@ -67,7 +67,7 @@ client.on('messageCreate', async message => {
 
     if (command === `${prefix}kickle`) {
         if (!jarvisActive) {
-            return message.reply('Kickle is not running. Say `jarvis run` to enable it');
+            return message.reply('mr stark, the suit is uh disabled');
         }
 
         const serverID = args[0];
