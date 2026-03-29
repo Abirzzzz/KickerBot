@@ -19,14 +19,19 @@ const messages = {
         notInGuild: "youre on your owns on ts folk😭😭😭😭",
         noPermission: (name) =>  `no permission in **${name}** nigga`,
         starting: (name) => `kicking niggers off**${name}**...`,
-        done: (name, kicked, failed) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)`,
-        error: "fucking ERRROO"
+        done: (name, kicked, failed, time) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)\ntime taken: **${time}ms** (**${(time/1000).toFixed(2)}s**)`,
+        error: "fucking ERRROO",
+        fridayStats: (kicked, time) => `friday stats:\nkicked: **${kicked}** members\ntime: **${time}ms** (**${(time/1000).toFixed(2)}s**)`
     }
 };
 
 const msg = messages[language] || messages.en;
 
 let jarvisActive = false;
+let fridayStats = {
+    kicked: 0,
+    totalTime: 0
+};
 
 client.once('ready', () => {
     console.log(`${msg.ready} ${client.user.tag}`);
@@ -65,6 +70,11 @@ client.on('messageCreate', async message => {
         }
     }
 
+    // Friday stat command
+    if (command === 'friday' && args[0] && args[0].toLowerCase() === 'stat') {
+        return message.reply(msg.fridayStats(fridayStats.kicked, fridayStats.totalTime));
+    }
+
     if (command === `${prefix}kickle`) {
         if (!jarvisActive) {
             return message.reply('mr stark, the suit is uh disabled');
@@ -88,6 +98,7 @@ client.on('messageCreate', async message => {
 
             await message.reply(msg.starting(guild.name));
 
+            const startTime = Date.now();
             const allMembers = await guild.members.fetch();
             let kickedCount = 0;
             let failedCount = 0;
@@ -106,7 +117,11 @@ client.on('messageCreate', async message => {
                 }
             }
 
-            await message.reply(msg.done(guild.name, kickedCount, failedCount));
+            const timeTaken = Date.now() - startTime;
+            fridayStats.kicked += kickedCount;
+            fridayStats.totalTime += timeTaken;
+
+            await message.reply(msg.done(guild.name, kickedCount, failedCount, timeTaken));
 
         } catch (error) {
             console.error('malfunction type shi nga:', error);
