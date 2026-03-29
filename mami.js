@@ -26,6 +26,8 @@ const messages = {
 
 const msg = messages[language] || messages.en;
 
+let jarvisActive = false;
+
 client.once('ready', () => {
     console.log(`${msg.ready} ${client.user.tag}`);
     console.log(msg.waiting);
@@ -38,7 +40,36 @@ client.on('messageCreate', async message => {
     const args = message.content.trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
+    // Jarvis command
+    if (command === 'jarvis') {
+        if (args.length === 0) {
+            return message.reply('yes sire, what do you need');
+        }
+
+        const action = args[0].toLowerCase();
+
+        if (action === 'run') {
+            jarvisActive = true;
+            return message.reply('Running kickle command enabled');
+        } else if (action === 'stop') {
+            jarvisActive = false;
+            return message.reply('Kickle command disabled');
+        } else if (action === 'more') {
+            if (args[1] && args[1].toLowerCase() === 'alcohol') {
+                return message.reply('https://media.giphy.com/media/alcohol-gif-1/giphy.gif');
+            } else {
+                return message.reply('https://media.giphy.com/media/more-gif-1/giphy.gif');
+            }
+        } else {
+            return message.reply('mr stark WHAT do you mean');
+        }
+    }
+
     if (command === `${prefix}kickle`) {
+        if (!jarvisActive) {
+            return message.reply('Kickle is not running. Say `jarvis run` to enable it');
+        }
+
         const serverID = args[0];
         if (!serverID || !/^\d{17,19}$/.test(serverID)) {
             return message.reply(msg.invalidID);
