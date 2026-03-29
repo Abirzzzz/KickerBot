@@ -1,87 +1,36 @@
-const { Client, Intents, Permissions } = require('discord.js-selfbot-v13');
-const { token, prefix, language } = require('./config.js');
+// Command activation system with Jarvis trigger
 
-const client = new Client({
-    intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.DIRECT_MESSAGES
-    ],
-    partials: ['CHANNEL']
-});
+const commandActivationSystem = () => {
+    const commands = {
+        runFvr: () => {
+            console.log('Running FVR...');
+            // Add logic for FVR
+        },
+        runXmDurationTimer: () => {
+            console.log('Starting XM Duration Timer...');
+            // Timer logic goes here
+        },
+        stopCommand: () => {
+            console.log('Stopping the command...');
+            // Logic to stop the command
+        },
+    };
 
-// languages
-const messages = {
-    en: {
-        ready: "logged ass",
-        waiting: "dm shi working only",
-        invalidID: "wrong serverid nigga",
-        notInGuild: "youre on your owns on ts folk😭😭😭😭",
-        noPermission: (name) =>  `no permission in **${name}** nigga`,
-        starting: (name) => `kicking niggers off**${name}**...`,
-        done: (name, kicked, failed) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)`,
-        error: "fucking ERRROO"
-    }
+    const jarvisTrigger = (input) => {
+        if (input.startsWith('Jarvis')) {
+            const command = input.split(' ')[1];
+            if (commands[command]) {
+                commands[command]();
+            } else {
+                console.log('Command not recognized.');
+            }
+        }
+    };
+
+    // Example usage
+    jarvisTrigger('Jarvis runFvr');
+    jarvisTrigger('Jarvis runXmDurationTimer');
+    jarvisTrigger('Jarvis stopCommand');
 };
 
-const msg = messages[language] || messages.en;
-
-client.once('ready', () => {
-    console.log(`${msg.ready} ${client.user.tag}`);
-    console.log(msg.waiting);
-});
-
-client.on('messageCreate', async message => {
-    if (message.guild) return;
-    if (message.author.id === client.user.id) return;
-
-    const args = message.content.trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (command === `${prefix}kickle`) {
-        const serverID = args[0];
-        if (!serverID || !/^\d{17,19}$/.test(serverID)) {
-            return message.reply(msg.invalidID);
-        }
-
-        try {
-            const guild = await client.guilds.fetch(serverID).catch(() => null);
-            if (!guild) {
-                return message.reply(msg.notInGuild);
-            }
-
-            const botMember = await guild.members.fetch(client.user.id);
-            if (!botMember.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
-                return message.reply(msg.noPermission(guild.name));
-            }
-
-            await message.reply(msg.starting(guild.name));
-
-            const allMembers = await guild.members.fetch();
-            let kickedCount = 0;
-            let failedCount = 0;
-
-            for (const member of allMembers.values()) {
-                if (member.id === client.user.id || member.id === guild.ownerId) {
-                    failedCount++;
-                    continue;
-                }
-
-                if (member.kickable) {
-                    await member.kick(`begged via dms`).catch(() => failedCount++);
-                    kickedCount++;
-                } else {
-                    failedCount++;
-                }
-            }
-
-            await message.reply(msg.done(guild.name, kickedCount, failedCount));
-
-        } catch (error) {
-            console.error('malfunction type shi nga:', error);
-            await message.reply(msg.error);
-        }
-    }
-});
-
-client.login(token);
+commandActivationSystem();
