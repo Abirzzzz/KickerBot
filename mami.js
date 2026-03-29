@@ -21,7 +21,7 @@ const messages = {
         starting: (name) => `kicking niggers off**${name}**...`,
         done: (name, kicked, failed, time) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)\ntime taken: **${time}ms** (**${(time/1000).toFixed(2)}s**)`,
         error: "fucking ERRROO",
-        fridayStats: (kicked, time) => `friday stats:\nkicked: **${kicked}** members\ntime: **${time}ms** (**${(time/1000).toFixed(2)}s**)`
+        fridayStats: (kicked, time) => `jarvis counterpart arhh stats:\nkicked: **${kicked}** members\ntime: **${time}ms** (**${(time/1000).toFixed(2)}s**)`
     }
 };
 
@@ -71,7 +71,7 @@ client.on('messageCreate', async message => {
     }
 
     // Friday stat command
-    if (command === 'friday' && args[0] && args[0].toLowerCase() === 'stat') {
+    if (command === 'friday,' && args[0] && args[0].toLowerCase() === 'stat') {
         return message.reply(msg.fridayStats(fridayStats.kicked, fridayStats.totalTime));
     }
 
